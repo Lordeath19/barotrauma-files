@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Randomevents>
+  <!-- SCRIPTED EVENTS -->
+  <EventPrefabs>
+    <!-- Configure Outpost Reactors -->
+    <ScriptedEvent identifier="filloutpostreactors">
+      <TagAction criteria="player" tag="player" />
+      <TagAction criteria="itemidentifier:dockinghatch" tag="dockinghatch" SubmarineType="Outpost" />
+      <TagAction criteria="itemtag:reactor" tag="targetreactor" submarinetype="Outpost" ContinueIfNoTargetsFound="true" />
+      <TagAction criteria="itemtag:reactorfuel" tag="targetreactorfuel" submarinetype="Outpost" ContinueIfNoTargetsFound="true" />
+      <WaitAction time="1" />
+      <TriggerAction target1tag="player" target2tag="dockinghatch" radius="100000" disableincombat="false" disableiftargetincapacitated="false" waitforinteraction="false" allowmultipletargets="true" />
+      <WaitAction time="1" />
+      <!-- Remove fuel rods from reactor's inventory -->
+      <StatusEffectAction targettag="targetreactorfuel">
+        <StatusEffect target="This" disabledeltatime="true">
+          <Conditional HasTag="reactor" targetcontainer="true" />
+          <Remove />
+        </StatusEffect>
+      </StatusEffectAction>
+      <WaitAction time="1" />
+      <!-- Refill the reactor's inventory, set its fuel consumption to 0 and prevent player interaction -->
+      <StatusEffectAction targettag="targetreactor">
+        <StatusEffect target="This" fuelconsumptionrate="0" nonplayerteaminteractable="true" setvalue="true">
+          <SpawnItem identifier="fuelrod_outpost" spawnposition="ThisInventory" spawnifcantbecontained="false" spawnifinventoryfull="false" allowstealing="false" />
+        </StatusEffect>
+      </StatusEffectAction>
+    </ScriptedEvent>
+    <!-- Configure Enemy Submarine Reactors -->
+    <ScriptedEvent identifier="fillenemyreactors">
+      <TagAction criteria="player" tag="player" />
+      <TagAction criteria="itemidentifier:dockinghatch" tag="dockinghatch" SubmarineType="Player" />
+      <TagAction criteria="itemtag:reactor" tag="targetreactor" SubmarineType="Enemy" ContinueIfNoTargetsFound="true" />
+      <TagAction criteria="itemtag:reactorfuel" tag="targetreactorfuel" submarinetype="Enemy" ContinueIfNoTargetsFound="true" />
+      <TriggerAction target1tag="player" target2tag="dockinghatch" radius="100000" disableincombat="false" disableiftargetincapacitated="false" waitforinteraction="false" allowmultipletargets="true" />
+      <!-- Remove fuel rods from reactor's inventory -->
+      <StatusEffectAction targettag="targetreactorfuel">
+        <StatusEffect target="This" disabledeltatime="true">
+          <Conditional HasTag="reactor" targetcontainer="true" />
+          <Remove />
+        </StatusEffect>
+      </StatusEffectAction>
+      <WaitAction time="1" />
+      <!-- Refill the reactor's inventory, set its fuel consumption to 0 and disable passive deteriotation -->
+      <StatusEffectAction targettag="targetreactor">
+        <StatusEffect target="This" fuelconsumptionrate="0" deteriorationspeed="0.0" setvalue="true">
+          <SpawnItem identifier="fuelrod_outpost" spawnposition="ThisInventory" spawnifcantbecontained="false" spawnifinventoryfull="false" />
+        </StatusEffect>
+      </StatusEffectAction>
+      <WaitAction time="1" />
+      <!-- Set the reactor's fission rate to 0 to avoid sounding the overheat alarm on round start -->
+      <StatusEffectAction targettag="targetreactor">
+        <StatusEffect target="This" fissionrate="0" setvalue="true" />
+      </StatusEffectAction>
+    </ScriptedEvent>
+  </EventPrefabs>
+  <!-- EVENT SETS -->
+  <EventSet identifier="errm.outpostevents" leveltype="outpost" allowatstart="true" minleveldifficulty="0" maxleveldifficulty="100" chooserandom="false" ignorecooldown="true" additive="true" selectalways="true">
+    <ScriptedEvent identifier="filloutpostreactors" commonness="100" probability="1" />
+  </EventSet>
+  <EventSet identifier="errm.transitevents" leveltype="locationconnection" allowatstart="true" minleveldifficulty="0" maxleveldifficulty="100" chooserandom="false" ignorecooldown="true" additive="true" selectalways="true">
+    <ScriptedEvent identifier="fillenemyreactors" commonness="100" probability="1" />
+  </EventSet>
+  <!--locationtype="outpost,city,research,military,mine,colony,settlement,construction,camp,base,blockade,survey,excavation,study,lab,clinic,hospital,surgery,hydroponics,biosphere,nourishment,factory,shipyard,fusion"-->
+</Randomevents>
