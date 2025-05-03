@@ -26,6 +26,14 @@
         </StatusEffect>
       </StatusEffectAction>
     </ScriptedEvent>
+    <ScriptedEvent identifier="createoutpostfuelrod">
+      <TagAction criteria="player" tag="player" />
+      <TagAction criteria="itemidentifier:dockinghatch" tag="dockinghatch" SubmarineType="Outpost" />
+      <TriggerAction target1tag="player" target2tag="dockinghatch" radius="100000" disableincombat="false" disableiftargetincapacitated="false" waitforinteraction="false" allowmultipletargets="true" />
+      <WaitAction time="1" />
+      <!-- Spawn the custom fuel rod in a random outpost container -->
+      <SpawnItem identifier="fuelrod_outpost" targettype="randomcontainer" allowstealing="false" />
+    </ScriptedEvent>
     <!-- Configure Enemy Submarine Reactors -->
     <ScriptedEvent identifier="fillenemyreactors">
       <TagAction criteria="player" tag="player" />
@@ -57,6 +65,9 @@
   <!-- EVENT SETS -->
   <EventSet identifier="errm.outpostevents" leveltype="outpost" allowatstart="true" minleveldifficulty="0" maxleveldifficulty="100" chooserandom="false" ignorecooldown="true" additive="true" selectalways="true">
     <ScriptedEvent identifier="filloutpostreactors" commonness="100" probability="1" />
+  </EventSet>
+  <EventSet identifier="errm.beaconevents" leveltype="locationconnection" locationtype="beaconstation" allowatstart="true" minleveldifficulty="0" maxleveldifficulty="100" chooserandom="false" ignorecooldown="true" additive="true" selectalways="true">
+    <ScriptedEvent identifier="createdoutpostfuelrod" commonness="100" probability="1" />
   </EventSet>
   <EventSet identifier="errm.transitevents" leveltype="locationconnection" allowatstart="true" minleveldifficulty="0" maxleveldifficulty="100" chooserandom="false" ignorecooldown="true" additive="true" selectalways="true">
     <ScriptedEvent identifier="fillenemyreactors" commonness="100" probability="1" />
